@@ -1,0 +1,54 @@
+
+<div class="container mt-1">
+  <h4 class="text-center mb-4">Instructor List</h4>
+
+  <div class="row">
+    <div class="col-md-4 mb-4" *ngFor="let instructor of instructors" data-aos="fade-up" data-aos-duration="800">
+      <div class="card">
+        <div class="card-body">
+            <img [src]="instructor.imageUrl" alt="Profile" class="rounded-circle mt-5" width="120" height="120" style="object-fit: cover; float: left;">
+   
+          <h5 class="card-title text-primary">{{ instructor.name }}</h5>
+          <p class="card-text" style="float: right;">
+            <strong>Email:</strong> {{ instructor.email }}<br>
+            <strong>Skills:</strong> {{ instructor.skills }}<br>
+            <strong>Experience:</strong> {{ instructor.experience }}<br>
+            <strong>Courses:</strong> {{ instructor.courses }}<br>
+            <strong>Rating:</strong> ⭐ {{ instructor.rating }}
+          </p>
+        </div>
+        <div class="card-footer bg-white border-0">
+          <button (click)="viewProfile(instructor)" class="btn btn-outline-primary btn-sm w-100">View Profile</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Simple Bootstrap Modal -->
+<div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      
+      <div class="text-center">
+        <img [src]="selectedInstructor?.imageUrl"
+             alt="Profile"
+             class="rounded-circle mb-3"
+             width="100"
+             height="100"
+             style="object-fit: cover;">
+        <h5 class="mb-2">{{ selectedInstructor?.name }}</h5>
+        <p class="mb-1"><strong>Skills:</strong> {{ selectedInstructor?.skills }}</p>
+        <p class="mb-1"><strong>Experience:</strong> {{ selectedInstructor?.experience }}</p>
+      </div>
+
+      <div class="text-center mt-3">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+

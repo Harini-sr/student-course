@@ -1,0 +1,38 @@
+<div class="container mt-5" *ngIf="course; else notFoundTemplate">
+  <div class="card shadow-sm border-0 p-4">
+    <h3 class="text-success mb-4">{{ course.title }}</h3>
+
+    <ul class="list-group list-group-flush mb-4">
+      <li class="list-group-item"><strong>Instructor:</strong> {{ course.instructor }}</li>
+      <li class="list-group-item"><strong>Category:</strong> {{ course.category }}</li>
+      <li class="list-group-item"><strong>Duration:</strong> {{ course.duration }}</li>
+      <li class="list-group-item"><strong>Rating:</strong> 
+        <span class="text-warning">⭐</span> {{ course.rating }}
+      </li>
+      <li class="list-group-item"><strong>Description:</strong> {{ course.description }}</li>
+    </ul>
+
+    <a 
+      [href]="course.videoUrl" 
+      target="_blank" 
+      rel="noopener" 
+      class="btn btn-primary btn-lg w-100 mb-3"
+    >
+      ▶ Watch Video
+    </a>
+
+    <a routerLink="/course" class="btn btn-outline-secondary d-block mx-auto" style="max-width: 200px;">
+      ← Back to Courses
+    </a>
+  </div>
+</div>
+
+<ng-template #notFoundTemplate>
+  <div class="container text-center mt-5 text-danger">
+    <h5>Course not found.</h5>
+    <a routerLink="/course" class="btn btn-outline-danger mt-3 px-4">Back</a>
+  </div>
+</ng-template>
+
+
+<router-outlet></router-outlet>

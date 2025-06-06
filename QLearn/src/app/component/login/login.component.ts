@@ -1,0 +1,44 @@
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+
+
+function passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  const password = control.get('password')?.value;
+  const confirmPass = control.get('confirmPass')?.value;
+  return password === confirmPass ? null : { passwordMismatch: true };
+}
+@Component({
+  selector: 'app-login',
+  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css'
+})
+
+
+
+export class LoginComponent {
+signUpForm!: FormGroup;
+
+constructor(){
+  this.signUpForm = new FormGroup({
+    name : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z ]+$")]),
+      email : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]),
+        password : new FormControl("", [Validators.required,  Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")]),
+          confirmPass : new FormControl("", [Validators.required]),
+            role : new FormControl("", [Validators.required])
+  }, { validators: passwordMatchValidator })
+}
+
+
+/* show = false;
+selectRole(event:any){
+   const value = event.target.value;
+   if(value === 'Instructor'){
+    this.show = true;
+   }
+   if(value === 'User'){
+    this.show = false;
+   }
+} */
+}

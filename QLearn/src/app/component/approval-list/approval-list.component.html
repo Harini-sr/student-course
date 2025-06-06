@@ -1,0 +1,79 @@
+<div class="card shadow-sm rounded-4 border-0 mb-4" *ngIf="course">
+  <div class="card-body">
+    <div class="row align-items-start">
+      <!-- Left Column: Course Info -->
+      <div class="col-md-6">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="fw-bold mb-0">{{ course.title }}</h5>
+
+          <!-- Status Badge -->
+          <span 
+            class="badge px-3 py-2 fw-medium"
+            [class.bg-warning]="course.status === 'Pending'"
+            [class.text-dark]="course.status === 'Pending'"
+            [class.bg-success]="course.status === 'Approved'"
+            [class.text-white]="course.status === 'Approved'"
+          >
+            <i 
+              class="fas me-1"
+              [class.fa-clock]="course.status === 'Pending'"
+              [class.text-warning]="course.status === 'Pending'"
+              [class.fa-check]="course.status === 'Approved'"
+              [class.text-white]="course.status === 'Approved'"
+            ></i>
+            {{ course.status }}
+          </span>
+        </div>
+
+        <p class="text-muted small mb-1">
+          <i class="fas fa-code me-1"></i> <strong>{{ course.code }}</strong>
+          <span class="ms-3"><i class="fas fa-building me-1"></i> {{ course.department }}</span>
+        </p>
+        <p class="text-muted small mb-1">
+          <i class="fas fa-star me-1 text-primary"></i> Priority:
+          <span class="text-primary">{{ course.priority }}</span>
+          <span class="ms-3"><i class="fas fa-graduation-cap me-1"></i> {{ course.credits }} Credits</span>
+        </p>
+      </div>
+
+      <!-- Middle Column: Review Info -->
+      <div class="col-md-4">
+        <p class="text-muted small mb-2">
+          {{ course.reviewMessage }}
+        </p>
+        <p class="text-muted small mb-1">
+          <i class="fas fa-calendar me-1"></i> Submitted: {{ course.submitted }}
+        </p>
+        <p class="text-muted small">
+          <i class="fas fa-eye me-1"></i> Reviewed: {{ course.reviewed }}
+        </p>
+      </div>
+
+      <!-- Right Column: Status + Button -->
+      <div class="col-md-2 text-end">
+        <p class="text-muted small mb-2">
+          <i class="fas fa-clock me-1"></i> {{ course.daysAgo }} days ago
+        </p>
+        <div class="status-indicators mb-2">
+          <i 
+            class="fas fa-lg"
+            [class.fa-hourglass-half]="course.status === 'Pending'"
+            [class.text-warning]="course.status === 'Pending'"
+            [class.fa-check-circle]="course.status === 'Approved'"
+            [class.text-success]="course.status === 'Approved'"
+            [attr.title]="course.status"
+          ></i>
+        </div>
+
+        <!-- Approve Button -->
+        <button 
+          *ngIf="course.status === 'Pending'" 
+          (click)="approveCourse()" 
+          class="btn btn-sm btn-outline-success w-100 rounded-pill"
+        >
+          Approve Course
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

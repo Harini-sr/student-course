@@ -1,0 +1,38 @@
+<!-- Beautiful Header -->
+<div class="container-fluid row p-3 m-0 bg-primary text-white" >
+  <div class="col-md-6">
+    <span class="p-3"><i class="bi bi-telephone-fill"></i> +91 1234567890</span>
+    <span class="ms-3"><i class="bi bi-envelope-fill"></i> {{ email }}</span>
+  </div>
+  
+  <div class="col-md-6 text-end">
+    <span class="p-2 m-1 rounded-circle bg-primary text-white social-icon"><i class="bi bi-facebook"></i></span>
+    <span class="p-2 m-1 rounded-circle bg-primary text-white social-icon"><i class="bi bi-whatsapp"></i></span>
+    <span class="p-2 m-1 rounded-circle bg-primary text-white social-icon"><i class="bi bi-twitter"></i></span>
+    <span class="p-2 m-1 rounded-circle bg-primary text-white social-icon"><i class="bi bi-youtube"></i></span>
+  </div>
+</div>
+
+<!-- Stylish Navbar -->
+<div class="container-fluid bg-white shadow-sm p-3 fixed">
+  <div class="row">
+    <div class="col-md-6">
+      <nav class="nav">
+        <ul class="navbar nav navbar-expand-lg">
+          <li class="nav-item"><a routerLink="/principal-dashboard" class="nav-link text-dark fw-bold">Dashboard</a></li>
+          <li class="nav-item"><a routerLink="/trainers" class="nav-link text-dark fw-bold">Trainers</a></li>
+          <li class="nav-item"><a routerLink="/course" class="nav-link text-dark fw-bold">All Courses</a></li>
+          <li class="nav-item"><a routerLink="/approval-list" class="nav-link text-dark fw-bold">Requested Courses</a></li>
+        </ul>
+      </nav>
+    </div>
+    
+    <div class="col-md-5"></div>
+    
+    <div class="col-md-1 text-end">
+      <img [src]="url" height="50px" width="60px" class="rounded-circle shadow-sm border" (click)="profile()">
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
