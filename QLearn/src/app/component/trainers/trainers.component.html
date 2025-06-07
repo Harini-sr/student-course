@@ -1,9 +1,11 @@
 
-<div class="container mt-1">
-  <h4 class="text-center mb-4">Instructor List</h4>
+<div class="container">
+
 
   <div class="row">
+      <h4 class="text-center p-2">Instructor List</h4>
     <div class="col-md-4 mb-4" *ngFor="let instructor of instructors" data-aos="fade-up" data-aos-duration="800">
+      
       <div class="card">
         <div class="card-body">
             <img [src]="instructor.imageUrl" alt="Profile" class="rounded-circle mt-5" width="120" height="120" style="object-fit: cover; float: left;">

@@ -7,7 +7,9 @@
   overflow: hidden;
   position: relative;
 }
-
+.container{
+  margin-top: 80px !important;
+}
 .card:hover {
   transform: translateY(-8px);
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);

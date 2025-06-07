@@ -6,10 +6,14 @@ import { TrainersComponent } from './component/trainers/trainers.component';
 import { CourseComponent } from './component/course/course.component';
 import { ListComponent } from './component/list/list.component';
 import { ApprovalListComponent } from './component/approval-list/approval-list.component';
+import { authGuard } from './auth.guard';
+import { MainPageComponent } from './component/main-page/main-page.component';
 
 export const routes: Routes = [
-    {
-        path: '',
+    { path: 'main-page', component: MainPageComponent }, 
+  { path: '', redirectTo: '/main-page', pathMatch: 'full' },
+     {
+        path: 'login',
         component: LoginComponent
     },
     {
@@ -18,22 +22,22 @@ export const routes: Routes = [
     },
     {
         path: 'profile',
-        component: ProfileComponent
+        component: ProfileComponent, 
     },
     {
         path: 'trainers',
-        component: TrainersComponent
+        component: TrainersComponent,
     },
     {
         path: 'course',
-        component:CourseComponent
+        component:CourseComponent,
     },
     {
         path: 'list/:id',
-        component: ListComponent
+        component: ListComponent,
     },
     {
         path: 'approval-list',
-        component: ApprovalListComponent
+        component: ApprovalListComponent,
     }
 ];

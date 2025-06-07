@@ -1,4 +1,10 @@
 
-<div class="container-fluid">
-    <img [src]="imageUrl" alt="profile">
+<div class="container-fluid  text-center mt-3">
+    <img [src]="profile" alt="profile">
+    <div class="content text-center mt-2">
+        <p>{{name}}</p>
+        <p>{{role}}</p>
+    </div>
 </div>
+
+<button class="btn btn-danger btn-sm" (click)="logout()">Logout</button>

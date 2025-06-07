@@ -1,5 +1,15 @@
+  <div class="row bg-primary align-items-center p-3">
+    <div class="col-md-6">
+      <h2 class="text-white ps-4 m-0">QLearn</h2>
+    </div>
+    <div class="col-md-6 text-end">
+      <img [src]="logo" alt="Logo" class="logo me-4" height="50">
+    </div>
+  </div>
+
+
 <div class="container mt-5">
-    <form class="form" [formGroup]="signUpForm">
+    <form class="form p-2" [formGroup]="signUpForm">
         <h2 class="text-center">Login in</h2>
         <div class="form-group">
             <label for="">Name:</label>
@@ -23,14 +33,14 @@
  </div>
        
         </div>
-           <div class="form-group">
+        <!--    <div class="form-group">
             <label for="">Confirm Password:</label>
             <input type="password" class="form-control" formControlName="confirmPass">
              <div *ngIf="signUpForm.get('confirmPass')?.touched && signUpForm.get('confirmPass')?.hasError('required')" class="text-danger">Password is required </div>
     <div *ngIf="signUpForm.hasError('passwordMismatch') && signUpForm.get('confirmPass')?.touched" class="text-danger">
     Passwords do not match
   </div>
-        </div>
+        </div> -->
  <div class="form-group">
   <label for="">Role:</label>
   <select class="form-select" formControlName="role">
@@ -59,9 +69,9 @@
         </div>
      </div> -->
     </form>
-    <div>
-        <button class="btn btn-primary" [disabled]="signUpForm.invalid">Submit</button>
-        <button class="btn btn-danger m-2">Reset</button>
+    <div class="p-2">
+        <button class="btn btn-primary" [disabled]="signUpForm.invalid" (click)="submit()">Submit</button>
+        <button class="btn btn-danger">Reset</button>
     </div>
 </div>
 

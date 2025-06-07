@@ -13,19 +13,18 @@ echarts.use([BarChart, GridComponent, CanvasRenderer]);
 
 import { MatDialogModule,MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+import { PrincipalServiceService } from '../../service/principal-service.service';
+import { HttpClientModule } from '@angular/common/http';
 @Component({
   selector: 'app-principal-dashboard',
-  imports: [NgxEchartsDirective, CommonModule, MatDialogModule],
+  imports: [NgxEchartsDirective, CommonModule, MatDialogModule, HttpClientModule],
   templateUrl: './principal-dashboard.component.html',
   styleUrl: './principal-dashboard.component.css'
 })
 export class PrincipalDashboardComponent {
 
 
-    totalCourses = 25;
-  totalInstructors = 10;
-  totalStudents = 120;
-  approvedCourses = 15;
+
 
 
 
@@ -69,7 +68,7 @@ chartOption: EChartsCoreOption = {
     ]
   };
 
-   constructor(private dialog:MatDialog, private router:Router){}
+   constructor(private dialog:MatDialog, private router:Router, private service:PrincipalServiceService){}
 
 
 
@@ -80,17 +79,44 @@ courseChart: any;
   ratingChart: any;
   completionChart: any;
 
+  role: string = '';
+  viewAll :any;
+      totalCourses : any;
+  totalInstructors : any;
+  totalStudents : any;
+  approvedCourses : any;
+  highRatedCourses :any;
   ngOnInit() {
+
+      this.service.getAll().subscribe((data:any)=>{
+        this.viewAll = data;
+        console.log(this.viewAll);
+        this.totalCourses = data.totalCourses;
+        this.totalInstructors = data.totalInstructors;
+        this.totalStudents = data.totalStudents;  
+        this.approvedCourses = data.approvedCourses;
+        this.highRatedCourses = data.highRatedCourses;
+      })
+
+
+  const userData = localStorage.getItem('user');
+  if (userData) {
+    const user = JSON.parse(userData);
+    this.role = user.role;
+  }
+
+
+       
         AOS.init();
        this.chartOptions = {
       title: {
-        text: 'Popular Courses',
+        text: 'Popular Courses',  
         left: 'center'
       },
       tooltip: {},
       xAxis: {
         type: 'category',
-        data: ['Angular', 'Node.js', 'Python', 'Java', 'React']
+        data: this.highRatedCourses
       },
       yAxis: {
         type: 'value'
