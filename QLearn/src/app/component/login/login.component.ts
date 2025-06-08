@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 
 /* function passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -12,7 +13,7 @@ import { AuthService } from '../../auth.service';
 } */
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, HttpClientModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -22,7 +23,7 @@ import { AuthService } from '../../auth.service';
 export class LoginComponent {
 signUpForm!: FormGroup;
 
-constructor(public router: Router, private authService:AuthService){
+constructor(public router: Router, private authService:AuthService, private http:HttpClient){
   this.signUpForm = new FormGroup({
     name : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z ]+$")]),
       email : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]),
@@ -46,13 +47,34 @@ selectRole(event:any){
 } */
 
    logo = 'assets/images/logo.jpeg';
-submit() {
+/* submit() {
 
 if (this.signUpForm.valid) {
  localStorage.setItem('user', JSON.stringify(this.signUpForm.value));
   this.router.navigate(['/principal-dashboard']);
 }
 
+} */
+submit() {
+  if (this.signUpForm.valid) {
+    const data = this.signUpForm.value;
+
+    this.http.post('http://localhost:3700/api/login', data).subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        if (res.role === 'Principal') {
+          this.router.navigate(['/principal-dashboard']);
+        } else if (res.role === 'Instructor') {
+          this.router.navigate(['/instructor-panel']);
+        } else {
+          this.router.navigate(['/student-home']);
+        }
+      },
+      error: err => {
+        alert(err.error.message);
+      }
+    });
+  }
 }
 
   
