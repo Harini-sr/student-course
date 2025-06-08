@@ -4,6 +4,7 @@ import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModu
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { PrincipalServiceService } from '../../service/principal-service.service';
 
 
 /* function passwordMatchValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -23,7 +24,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class LoginComponent {
 signUpForm!: FormGroup;
 
-constructor(public router: Router, private authService:AuthService, private http:HttpClient){
+constructor(public router: Router, private authService:AuthService, private http:HttpClient, private service:PrincipalServiceService){
   this.signUpForm = new FormGroup({
     name : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z ]+$")]),
       email : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]),
@@ -59,7 +60,9 @@ submit() {
   if (this.signUpForm.valid) {
     const data = this.signUpForm.value;
 
-    this.http.post('http://localhost:3700/api/login', data).subscribe({
+    /* http://localhost:3700/api/login */
+
+    this.service.login(data).subscribe({
       next: (res: any) => {
         alert(res.message);
         if (res.role === 'Principal') {
