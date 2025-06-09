@@ -4,10 +4,11 @@ import { ProfileComponent } from './component/profile/profile.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './auth.service';
+import { NavbarComponent } from "./component/navbar/navbar.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, CommonModule],
+  imports: [RouterOutlet, RouterLink, CommonModule, NavbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -19,8 +20,12 @@ constructor(private dialog: MatDialog, public authService: AuthService, private 
   url='/assets/images/profile.jpg';
 
 role: string = '';
-
+roles:any;
 ngOnInit() {
+
+   this.roles = localStorage.getItem('role');
+  console.log('User Role:', this.roles);
+  
   const userData = localStorage.getItem('user');
   if (userData) {
     const user = JSON.parse(userData);

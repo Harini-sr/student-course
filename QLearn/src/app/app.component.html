@@ -1,5 +1,5 @@
 <div class="app" *ngIf="!isLoginPage()">
-<div class="root">
+<div class="root"  *ngIf="roles !== 'Student'">
     <div class="container-fluid bg-light p-3 shadow-sm fixed-top">
     <h1 class="text-center text-primary">Q_Learn Principal</h1>
   </div>
@@ -46,3 +46,4 @@
 
 </div>
 <router-outlet></router-outlet>
+<app-navbar></app-navbar>

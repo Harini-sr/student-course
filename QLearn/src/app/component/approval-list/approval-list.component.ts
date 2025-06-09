@@ -22,7 +22,13 @@ export class ApprovalListComponent implements OnInit {
     private dialog: MatDialog
   ) {}
 
+  roles:any;
   ngOnInit(): void {
+
+     this.roles = localStorage.getItem('role');
+  console.log('User Role:', this.roles);
+  
+
     this.courseForm = this.fb.group({
       title: ['', [
         Validators.required,

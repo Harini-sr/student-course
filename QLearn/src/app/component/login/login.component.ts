@@ -29,6 +29,7 @@ constructor(public router: Router, private authService:AuthService, private http
     name : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z ]+$")]),
       email : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]),
         password : new FormControl("", [Validators.required,  Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")]),
+      role: new FormControl('', Validators.required)
         /*   confirmPass : new FormControl("", [Validators.required]), */
            /*  role : new FormControl("", [Validators.required]) */
   },/*  { validators: passwordMatchValidator } */
@@ -57,6 +58,8 @@ if (this.signUpForm.valid) {
 
 } */
 submit() {
+  console.log("sdhv");
+  
   if (this.signUpForm.valid) {
     const data = this.signUpForm.value;
 
@@ -65,13 +68,14 @@ submit() {
     this.service.login(data).subscribe({
       next: (res: any) => {
         alert(res.message);
-       /*  if (res.role === 'Principal') {
+    if (res.role === 'Admin') {
           this.router.navigate(['/principal-dashboard']);
-        } else if (res.role === 'Instructor') {
-          this.router.navigate(['/instructor-panel']);
-        } else {
-          this.router.navigate(['/student-home']);
-        } */
+        } else if (res.role === 'Student') {
+          this.router.navigate(['/dashboard']);
+        } 
+         localStorage.setItem('role', res.role);
+           localStorage.setItem('name', this.signUpForm.value.name);
+        localStorage.setItem('email', this.signUpForm.value.email);
            this.router.navigate(['/principal-dashboard']);
       },
       error: err => {

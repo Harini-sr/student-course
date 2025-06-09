@@ -43,3 +43,6 @@ app.use('/api', authRoutes);
 /* all course */
 const courseRoutes = require('./routes/courseRoutes');
 app.use('/api/courses', courseRoutes);
+
+const userRoutes = require('./routes/dashboard');
+app.use('/api', userRoutes);

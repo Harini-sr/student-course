@@ -1,4 +1,4 @@
-/* const express = require('express');
+const express = require('express');
 const router = express.Router();
 const Course = require('../models/allCourse');
 
@@ -37,8 +37,8 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
- */
 
+/*
 
 const express = require('express');
 const router = express.Router();
@@ -139,3 +139,5 @@ router.get('/material/:filename', (req, res) => {
 });
 
 module.exports = router;
+
+*/

@@ -11,11 +11,12 @@ export class PrincipalServiceService {
 /*   ApiUrl = 'http://localhost:3700/api/dashboard/metrics'; */
 ApiUrl = 'https://backend-0x10.onrender.com/api/dashboard/metrics'; 
 
-loginUrl = 'https://backend-0x10.onrender.com/api/login';
+loginUrl = 'http://localhost:3700/api/login';  /* https://backend-0x10.onrender.com/ */
 
-loginGetUrl = 'https://backend-0x10.onrender.com/api/users';   /* http://localhost:3700/api/users */
+loginGetUrl = 'http://localhost:3700/api/users';   /* http://localhost:3700/api/users */
 insUrl = 'http://localhost:3700/instructors';
  private baseUrl = 'http://localhost:3700/api/courses';
+ private studentUrl = 'http://localhost:3000/api/students';
 
   getAll(){
     return this.http.get(this.ApiUrl);
@@ -49,5 +50,9 @@ insUrl = 'http://localhost:3700/instructors';
 
   deleteCourse(id: string) {
     return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+  /* student details */
+  getStudents(){
+    return this.http.get(this.studentUrl);
   }
 }

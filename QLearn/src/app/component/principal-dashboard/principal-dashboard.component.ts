@@ -53,7 +53,7 @@ export class PrincipalDashboardComponent {
   viewAll: any;
   totalCourses: any;
   totalInstructors: any;
-  totalStudents: any;
+  totalStudents :any;
   approvedCourses: any;
   highRatedCourses: any;
   allDepartments: any;
@@ -62,12 +62,22 @@ export class PrincipalDashboardComponent {
 
   instructorCourseChart: any;
   recommendedCourses: any;
-
+  
+roles:any
   ngOnInit() {
+
+     this.roles = localStorage.getItem('role');
+  console.log('User Role:', this.roles);
+  
     this.service.getInstructor().subscribe((data: any) => {
       this.totalInstructors = data.length;
       console.log(this.totalInstructors);
+
     });
+
+ this.service.getStudents().subscribe((students:any)=>{
+this.totalStudents = students.length;
+ })
 
   this.service.getCourses().subscribe((data: any[]) => {
     this.totalCourses = data.length;
@@ -75,6 +85,8 @@ export class PrincipalDashboardComponent {
     this.recommendedCourses = data.filter(course => course.rating >= 3);
     this.titles = data.map(course => course.title);
     this.allDepartments = new Set(data.map(course => course.department)).size;
+ 
+    
 
     // Populate courseChart dynamically by instructor
     const instructorCountMap: { [key: string]: number } = {};

@@ -21,7 +21,7 @@
            <div class="form-group">
             <label for="">Email:</label>
             <input type="email" class="form-control" formControlName="email">
-                <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.hasError('required')" class="text-danger">Name is required </div>
+                <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.hasError('required')" class="text-danger">Email is required </div>
          <div *ngIf="signUpForm.get('email')?.touched && signUpForm.get('email')?.hasError('pattern')" class="text-danger">Email is must be valid format </div>
        
         </div>
@@ -41,19 +41,18 @@
     Passwords do not match
   </div>
         </div> -->
-<!--  <div class="form-group">
+  <div class="form-group">
   <label for="">Role:</label>
   <select class="form-select" formControlName="role">
     <option value="" selected disabled>Select role..</option>
-        <option value="Principal">Principal</option>
-    <option value="Instructor">Instructor</option>
-    <option value="User">User</option>
+        <option value="Admin">Admin</option>
+    <option value="Student">Student</option>
   </select>
 
   <div *ngIf="signUpForm.get('role')?.touched && signUpForm.get('role')?.hasError('required')" class="text-danger">
     Role is required
   </div>
-</div> -->
+</div> 
 
    <!--   <div *ngIf="show">
        <div class="form-group" >
@@ -70,8 +69,9 @@
      </div> -->
     </form>
     <div class="p-2">
-        <button class="btn btn-primary" [disabled]="signUpForm.invalid" (click)="submit()">Submit</button>
+      <!--   <button class="btn btn-primary" [disabled]="signUpForm.invalid" (click)="submit()">Submit</button> -->
         <button class="btn btn-danger">Reset</button>
     </div>
+    <button (click)="submit()" class="btn btn-primary" [disabled]="signUpForm.invalid">Submit</button>
 </div>
 

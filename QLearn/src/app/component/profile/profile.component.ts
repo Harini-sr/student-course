@@ -1,55 +1,38 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../auth.service';
-import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { PrincipalServiceService } from '../../service/principal-service.service';
+import { Router, RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
-  imports: [],
+  standalone: true,
+  imports: [ RouterModule],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent {
-  
-   profile= 'assets/images/profile.jpg';
-  isLoggedIn!: boolean;
-   constructor(private authService: AuthService, private router: Router, private dialog: MatDialog, private service: PrincipalServiceService) {}
-
-   name:any;
-   email:any;
-   role:any;
-
-
-   
-ngOnInit(){
-/*   const userData = localStorage.getItem('user');
-  if (userData) {
-    const user = JSON.parse(userData); 
-    this.name = user.name;
-    this.role = user.role;
+  studentNameFirstLetter = 'J'; // Replace this with real data
+  isDropdownOpen = false;
+roles:any;
+  constructor(private router: Router) {
+      this.roles = localStorage.getItem('role');
+  console.log('User Role:', this.roles);
   }
-  this.email = localStorage.getItem('email'); */
- 
-   this.service.getLoginData().subscribe((data:any) => {
-    this.name = data[0].name;
-    console.log("data",data);
-    
-    this.email = data[0].email;  
-    this.role = data[0].role;
-    this.isLoggedIn = data.isLoggedIn; 
-})
-}
+
+  toggleDropdown() {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown() {
+    this.isDropdownOpen = false;
+  }
 
   logout() {
-    /* this.authService.logout();     */   
-       this.name = '';
-      this.email = '';
-      this.role = '';
-    this.router.navigate(['/login']); 
-  
-
-  this.dialog.closeAll()
+    this.closeDropdown();
+    this.router.navigate(['/login']);
   }
 
+  goToProfile() {
+    this.closeDropdown();
+    this.router.navigate(['/student/student-detail']);
+  }
 }
+

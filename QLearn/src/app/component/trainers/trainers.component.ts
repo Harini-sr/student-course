@@ -3,15 +3,17 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
   import * as AOS from 'aos';
 import { PrincipalServiceService } from '../../service/principal-service.service';
+import { FormsModule } from '@angular/forms';
 // Import Bootstrap types if you want typing support (optional)
 declare var bootstrap: any;
 @Component({
   selector: 'app-trainers',
-  imports: [ CommonModule],
+  imports: [ CommonModule, FormsModule],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.css'
 })
 export class TrainersComponent {
+  selectedInstructor: any;
 
   constructor(private service:PrincipalServiceService){}
 /* instructors = [
@@ -72,10 +74,12 @@ department:any;
 role:any;
 education:any;
 instructors: any[] = [];
-
+roles: string | null = null;
 ngOnInit() {
   AOS.init();
-
+  this.roles = localStorage.getItem('role');
+  console.log('User Role:', this.roles);
+  
 this.service.getInstructor().subscribe((data:any)=>{
   this.instructors = data;
     console.log(this.instructors);
@@ -83,7 +87,7 @@ this.service.getInstructor().subscribe((data:any)=>{
 
 }
 
-  selectedInstructor: any = null;
+/*   selectedInstructor: any = null;
 
   viewProfile(instructor: any) {
     this.selectedInstructor = instructor;
@@ -91,7 +95,25 @@ this.service.getInstructor().subscribe((data:any)=>{
     const modal = new bootstrap.Modal(modalElement);
     modal.show();
   }
+ */
 
 
+searchTerm: string = '';
+
+filteredInstructors() {
+  const term = this.searchTerm.toLowerCase();
+  return this.instructors.filter(instructor =>
+    instructor.name.toLowerCase().includes(term) ||
+    instructor.email.toLowerCase().includes(term) ||
+    instructor.department.toLowerCase().includes(term) ||
+    instructor.instructorId.toLowerCase().includes(term)
+  );
+}
+
+viewProfile(instructor: any) {
+  this.selectedInstructor = instructor;
+  const modal = new bootstrap.Modal(document.getElementById('profileModal')!);
+  modal.show();
+}
 
 }
