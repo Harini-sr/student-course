@@ -1,33 +1,97 @@
-<div class="container mt-1">
-  <h4 class="text-center p-3">All Available Courses</h4>
+<div class="container-fluid row">
+  <h1 class="text-center col-md-6">Courses</h1>
+  <div class="col-md-3"></div>
+  <button class="btn btn-primary col-md-2" style="width: 200px; margin-left: 65px;" (click)="openDialog()">Create courses!</button>
+</div>
 
+<div class="container mt-4">
   <div class="row">
-    <div 
-      class="col-md-4 mb-4"
-      *ngFor="let course of courses"
-      data-aos="fade-up"
-      data-aos-duration="800"
-    >
-      <div class="card h-100 shadow-sm border-0">
+    <div *ngFor="let course of courses" class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <h5 class="card-title text-primary">{{ course.title }}</h5>
-          <p class="card-text">
-            <strong>Instructor:</strong> {{ course.instructor }} <br>
-            <strong>Category:</strong> {{ course.category }} <br>
-            <strong>Duration:</strong> {{ course.duration }} <br>
-            <strong>Rating:</strong> ⭐ {{ course.rating }}
-          </p>
-        </div>
-        <div class="card-footer bg-white border-0">
-     <a [routerLink]="['/list', course.id]" class="btn btn-outline-primary btn-sm w-100">View Course</a>
-
+          <h5 class="card-title">{{ course.title }}</h5>
+          <p class="card-text"><strong>Description:</strong> {{ course.description }}</p>
+          <p class="card-text"><strong>Department:</strong> {{ course.department }}</p>
+          <p class="card-text"><strong>Instructor:</strong> {{ course.instructor }}</p>
+          <div *ngIf="course.modules && course.modules.length > 0">
+            <p class="card-text"><strong>Modules:</strong></p>
+            <ul>
+              <li *ngFor="let mod of course.modules">
+                <strong>{{ mod.title }}</strong>: {{ mod.description }}
+              </li>
+            </ul>
+          </div>
+          <p class="card-text"><strong>Category:</strong> {{ course.category }}</p>
+          <p class="card-text"><strong>Duration:</strong> {{ course.duration }}</p>
+          <p class="card-text"><strong>Rating:</strong> {{ course.rating }}</p>
+          <button class="btn btn-primary me-2" [routerLink]="['/list', course._id]">Edit</button>
+          <button class="btn btn-danger" (click)="deleteCourse(course._id)">Delete</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+<!-- 
+<ng-template #noCourses>
+  <div class="text-center text-muted mt-4">
+    <p>No courses available at the moment.</p>
+  </div>
+</ng-template>
 
 <router-outlet></router-outlet>
 
+<div class="container mt-3">
+  <h4 class="text-center mb-3">{{ isEditMode ? 'Update Course' : 'Add New Course' }}</h4>
 
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="border p-4 rounded bg-light shadow-sm">
 
+    <div class="form-group mb-3">
+      <label>Title</label>
+      <input formControlName="title" class="form-control" type="text" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Description</label>
+      <textarea formControlName="description" class="form-control" required></textarea>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Department</label>
+      <input formControlName="department" class="form-control" type="text" required>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Instructor</label>
+      <input formControlName="instructor" class="form-control" type="text" required>
+    </div>
+
+    <div formArrayName="modules" class="mb-3">
+      <label>Modules</label>
+      <div *ngFor="let module of modules.controls; let i = index" [formGroupName]="i" class="border p-2 rounded mb-2 bg-white">
+        <input formControlName="title" placeholder="Module Title" class="form-control mb-1" required />
+        <textarea formControlName="description" placeholder="Module Description" class="form-control mb-1" required></textarea>
+        <button type="button" class="btn btn-danger btn-sm" (click)="removeModule(i)">Remove Module</button>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm mt-2" (click)="addModule()">Add Module</button>
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Category</label>
+      <input formControlName="category" class="form-control" type="text">
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Duration</label>
+      <input formControlName="duration" class="form-control" type="text">
+    </div>
+
+    <div class="form-group mb-3">
+      <label>Rating</label>
+      <input formControlName="rating" class="form-control" type="number" min="0" max="5">
+    </div>
+
+    <button class="btn btn-success w-100" type="submit">
+      {{ isEditMode ? 'Update Course' : 'Add Course' }}
+    </button>
+  </form>
+</div> -->

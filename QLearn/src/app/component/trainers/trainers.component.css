@@ -7,7 +7,7 @@
   overflow: hidden;
   position: relative;
 }
-.container{
+.row{
   margin-top: 80px !important;
 }
 .card:hover {

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
   import * as AOS from 'aos';
+import { PrincipalServiceService } from '../../service/principal-service.service';
 // Import Bootstrap types if you want typing support (optional)
 declare var bootstrap: any;
 @Component({
@@ -11,7 +12,9 @@ declare var bootstrap: any;
   styleUrl: './trainers.component.css'
 })
 export class TrainersComponent {
-instructors = [
+
+  constructor(private service:PrincipalServiceService){}
+/* instructors = [
     {
           imageUrl: 'assets/images/kids.jpg',
       name: 'Alice Kumar',
@@ -62,10 +65,22 @@ instructors = [
       rating: 4.3
     }
   ];
-
+ */
+name:any;
+email:any;
+department:any;
+role:any;
+education:any;
+instructors: any[] = [];
 
 ngOnInit() {
   AOS.init();
+
+this.service.getInstructor().subscribe((data:any)=>{
+  this.instructors = data;
+    console.log(this.instructors);
+})
+
 }
 
   selectedInstructor: any = null;

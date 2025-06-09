@@ -8,8 +8,8 @@
   overflow: hidden;
  
 }
-.container{
-  margin-top: 80px !important;
+.container-fluid{
+  margin-top: 120px !important;
 }
 .card:hover {
   transform: scale(1.03);
@@ -40,3 +40,5 @@
   background-color: #0d6efd;
   color: #fff;
 }
+
+

@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const app = express();
 
 mongoose.connect(
@@ -12,6 +13,7 @@ mongoose.connect(
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+const upload = multer({ dest: 'uploads/' });
 
 const dashboardRoutes = require('./routes/dashboard');
 app.use('/api/dashboard', dashboardRoutes);
@@ -36,3 +38,8 @@ app.get('/instructors', async (req, res) => {
 });
 const authRoutes = require('./routes/auth');
 app.use('/api', authRoutes);
+
+
+/* all course */
+const courseRoutes = require('./routes/courseRoutes');
+app.use('/api/courses', courseRoutes);

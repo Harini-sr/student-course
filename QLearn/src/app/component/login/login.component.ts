@@ -30,7 +30,7 @@ constructor(public router: Router, private authService:AuthService, private http
       email : new FormControl("", [Validators.required,   Validators.pattern("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")]),
         password : new FormControl("", [Validators.required,  Validators.pattern("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$")]),
         /*   confirmPass : new FormControl("", [Validators.required]), */
-            role : new FormControl("", [Validators.required])
+           /*  role : new FormControl("", [Validators.required]) */
   },/*  { validators: passwordMatchValidator } */
 )
 }
@@ -65,13 +65,14 @@ submit() {
     this.service.login(data).subscribe({
       next: (res: any) => {
         alert(res.message);
-        if (res.role === 'Principal') {
+       /*  if (res.role === 'Principal') {
           this.router.navigate(['/principal-dashboard']);
         } else if (res.role === 'Instructor') {
           this.router.navigate(['/instructor-panel']);
         } else {
           this.router.navigate(['/student-home']);
-        }
+        } */
+           this.router.navigate(['/principal-dashboard']);
       },
       error: err => {
         alert(err.error.message);

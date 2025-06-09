@@ -1,20 +1,19 @@
 import { Component } from '@angular/core';
 import * as AOS from 'aos';
-import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
+import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
-// import necessary echarts components
 import { BarChart } from 'echarts/charts';
 import { GridComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { EChartsCoreOption } from 'echarts';
-import { ProfileComponent } from '../profile/profile.component';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 echarts.use([BarChart, GridComponent, CanvasRenderer]);
 
-import { MatDialogModule,MatDialog } from '@angular/material/dialog';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { PrincipalServiceService } from '../../service/principal-service.service';
 import { HttpClientModule } from '@angular/common/http';
+
 @Component({
   selector: 'app-principal-dashboard',
   imports: [NgxEchartsDirective, CommonModule, MatDialogModule, HttpClientModule],
@@ -22,82 +21,126 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrl: './principal-dashboard.component.css'
 })
 export class PrincipalDashboardComponent {
-
-
-
-
-
-
-chartOption: EChartsCoreOption = {
-    title: {
-      text: 'Enrollment Summary by Course',
-      left: 'center'
-    },
+  chartOption: EChartsCoreOption = {
+    title: { text: 'Enrollment Summary by Course', left: 'center' },
     tooltip: {
       trigger: 'axis',
-      axisPointer: {            // Use axis to trigger tooltip
-        type: 'shadow'        // 'shadow' as default; can also be 'line' or 'shadow'
-      }
+      axisPointer: { type: 'shadow' }
     },
-    legend: {
-      data: ['Students'],
-      top: 30
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
-    },
+    legend: { data: ['Students'], top: 30 },
+    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
     xAxis: {
       type: 'category',
       data: ['Mathematics', 'Physics', 'Chemistry', 'Computer Science', 'Biology']
     },
-    yAxis: {
-      type: 'value'
-    },
-    series: [
-      {
-        name: 'Students',
-        type: 'bar',
-        data: [120, 90, 60, 150, 70],
-        itemStyle: {
-          color: '#5470C6'
-        }
-      }
-    ]
+    yAxis: { type: 'value' },
+    series: [{
+      name: 'Students',
+      type: 'bar',
+      data: [120, 90, 60, 150, 70],
+      itemStyle: { color: '#5470C6' }
+    }]
   };
 
-   constructor(private dialog:MatDialog, private router:Router, private service:PrincipalServiceService){}
+  constructor(private dialog: MatDialog, private router: Router, private service: PrincipalServiceService) {}
 
-
-
- chartOptions: any;
-
-
-courseChart: any;
+  chartOptions: any;
+  courseChart: any;
   ratingChart: any;
   completionChart: any;
 
   role: string = '';
-  viewAll :any;
-      totalCourses : any;
-  totalInstructors : any;
-  totalStudents : any;
-  approvedCourses : any;
-  highRatedCourses :any;
+  viewAll: any;
+  totalCourses: any;
+  totalInstructors: any;
+  totalStudents: any;
+  approvedCourses: any;
+  highRatedCourses: any;
+  allDepartments: any;
+  titles: any;
+  ratings: any;
+
+  instructorCourseChart: any;
+  recommendedCourses: any;
+
   ngOnInit() {
+    this.service.getInstructor().subscribe((data: any) => {
+      this.totalInstructors = data.length;
+      console.log(this.totalInstructors);
+    });
 
-      this.service.getAll().subscribe((data:any)=>{
-        this.viewAll = data;
-        console.log(this.viewAll);
-        this.totalCourses = data.totalCourses;
-        this.totalInstructors = data.totalInstructors;
-        this.totalStudents = data.totalStudents;  
-        this.approvedCourses = data.approvedCourses;
-        this.highRatedCourses = data.highRatedCourses;
-      })
+  this.service.getCourses().subscribe((data: any[]) => {
+    this.totalCourses = data.length;
+    this.ratings = data.map(course => course.rating);
+    this.recommendedCourses = data.filter(course => course.rating >= 3);
+    this.titles = data.map(course => course.title);
+    this.allDepartments = new Set(data.map(course => course.department)).size;
 
+    // Populate courseChart dynamically by instructor
+    const instructorCountMap: { [key: string]: number } = {};
+    data.forEach(course => {
+      const instructor = course.instructor || 'Unknown';
+      instructorCountMap[instructor] = (instructorCountMap[instructor] || 0) + 1;
+    });
+    const instructorNames = Object.keys(instructorCountMap);
+    const courseCounts = Object.values(instructorCountMap);
+
+    this.courseChart = {
+      title: { text: 'Courses Created per Instructor', left: 'center' },
+      tooltip: { trigger: 'axis' },
+      xAxis: { type: 'category', data: instructorNames },
+      yAxis: { type: 'value' },
+      series: [{
+        type: 'bar',
+        data: courseCounts,
+        itemStyle: { color: '#42A5F5' }
+      }]
+    };
+
+    AOS.init();
+
+    this.chartOptions = {
+      title: { text: 'Popular Courses', left: 'center' },
+      tooltip: {},
+      xAxis: { type: 'category', data: this.titles },
+      yAxis: { type: 'value' },
+      series: [{
+        name: 'Ratings',
+        type: 'bar',
+        data: this.ratings,
+        itemStyle: { color: '#4CAF50' }
+      }]
+    };
+
+    // Group ratings by instructor and calculate average
+    const instructorRatings: { [key: string]: number[] } = {};
+
+    data.forEach((course: { instructor: string; rating: number; }) => {
+      const instructor = course.instructor || 'Unknown';
+      if (!instructorRatings[instructor]) instructorRatings[instructor] = [];
+      instructorRatings[instructor].push(course.rating);
+    });
+
+    const avgInstructorNames = Object.keys(instructorRatings);
+    const avgRatings = avgInstructorNames.map(name => {
+      const ratings = instructorRatings[name];
+      const total = ratings.reduce((a, b) => a + b, 0);
+      return parseFloat((total / ratings.length).toFixed(2));
+    });
+
+    // Assign to ratingChart
+    this.ratingChart = {
+      title: { text: 'Average Ratings per Instructor', left: 'center' },
+      xAxis: { type: 'category', data: avgInstructorNames },
+      yAxis: { type: 'value', min: 0, max: 5 },
+      series: [{
+        type: 'line',
+        data: avgRatings,
+        itemStyle: { color: '#66BB6A' },
+        smooth: true
+      }]
+    };
+  });
 
   const userData = localStorage.getItem('user');
   if (userData) {
@@ -105,83 +148,27 @@ courseChart: any;
     this.role = user.role;
   }
 
-
-       
-        AOS.init();
-       this.chartOptions = {
-      title: {
-        text: 'Popular Courses',  
-        left: 'center'
-      },
-      tooltip: {},
-      xAxis: {
-        type: 'category',
-        data: this.highRatedCourses
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [
-        {
-          name: 'Enrollments',
-          type: 'bar',
-          data: [120, 90, 150, 70, 110],
-          itemStyle: {
-            color: '#4CAF50'
-          }
-        }
+  this.completionChart = {
+    title: { text: 'Course Completion Rate (%)', left: 'center' },
+    tooltip: { trigger: 'item' },
+    legend: { bottom: 0 },
+    series: [{
+      name: 'Completion Rate',
+      type: 'pie',
+      radius: '55%',
+      data: [
+        { value: 85, name: 'Alice' },
+        { value: 70, name: 'Bob' },
+        { value: 60, name: 'Charlie' },
+        { value: 90, name: 'David' }
       ]
-    };
-    this.courseChart = {
-      title: { text: 'Courses Created per Instructor', left: 'center' },
-      xAxis: { type: 'category', data: ['Alice', 'Bob', 'Charlie', 'David'] },
-      yAxis: { type: 'value' },
-      series: [{
-        type: 'bar',
-        data: [5, 8, 3, 6],
-        itemStyle: { color: '#42A5F5' }
-      }]
-    };
-
-    this.ratingChart = {
-      title: { text: 'Average Ratings per Instructor', left: 'center' },
-      xAxis: { type: 'category', data: ['Alice', 'Bob', 'Charlie', 'David'] },
-      yAxis: { type: 'value', min: 0, max: 5 },
-      series: [{
-        type: 'line',
-        data: [4.5, 4.0, 3.8, 4.7],
-        itemStyle: { color: '#66BB6A' },
-        smooth: true
-      }]
-    };
-
-    this.completionChart = {
-      title: { text: 'Course Completion Rate (%)', left: 'center' },
-      tooltip: { trigger: 'item' },
-      legend: { bottom: 0 },
-      series: [{
-        name: 'Completion Rate',
-        type: 'pie',
-        radius: '55%',
-        data: [
-          { value: 85, name: 'Alice' },
-          { value: 70, name: 'Bob' },
-          { value: 60, name: 'Charlie' },
-          { value: 90, name: 'David' }
-        ]
-      }]
-    };
-  }
-
+    }]
+  };
+}
 
   courses = [
-  { title: 'Angular Basics', rating: 4.8, status: 'Approved',department: 'cse',  },
-  { title: 'Node.js Fundamentals', rating: 4.2, status: 'Approved',  },
-  { title: 'MongoDB Mastery', rating: 4.9, status: 'Approved',  },
-
-]
-
-// Filter recommended ones
-recommendedCourses = this.courses.filter(c => c.rating >= 4.5 && c.status === 'Approved');
-
+    { title: 'Angular Basics', rating: 4.8, status: 'Approved', department: 'cse' },
+    { title: 'Node.js Fundamentals', rating: 4.2, status: 'Approved' },
+    { title: 'MongoDB Mastery', rating: 4.9, status: 'Approved' }
+  ];
 }

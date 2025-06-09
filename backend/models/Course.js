@@ -9,5 +9,5 @@ const courseSchema = new mongoose.Schema({
   completedStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = mongoose.model('allCourse', courseSchema);
 

@@ -1,82 +1,100 @@
-<div class="container-fluid">
-        <h4 class="text-center p-2">Requested List</h4>
-  <div class="card shadow-sm rounded-4 border-0 mb-4" *ngIf="course">
-  <div class="card-body">
-    <div class="row align-items-start">
-      <!-- Left Column: Course Info -->
-      <div class="col-md-6">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="fw-bold mb-0">{{ course.title }}</h5>
+<div class="container mt-5">
+  <h4 class="text-center mb-3">Add New Course</h4>
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="border p-4 rounded bg-light shadow-sm">
 
-          <!-- Status Badge -->
-          <span 
-            class="badge px-3 py-2 fw-medium"
-            [class.bg-warning]="course.status === 'Pending'"
-            [class.text-dark]="course.status === 'Pending'"
-            [class.bg-success]="course.status === 'Approved'"
-            [class.text-white]="course.status === 'Approved'"
-          >
-            <i 
-              class="fas me-1"
-              [class.fa-clock]="course.status === 'Pending'"
-              [class.text-warning]="course.status === 'Pending'"
-              [class.fa-check]="course.status === 'Approved'"
-              [class.text-white]="course.status === 'Approved'"
-            ></i>
-            {{ course.status }}
-          </span>
-        </div>
-
-        <p class="text-muted small mb-1">
-          <i class="fas fa-code me-1"></i> <strong>{{ course.code }}</strong>
-          <span class="ms-3"><i class="fas fa-building me-1"></i> {{ course.department }}</span>
-        </p>
-        <p class="text-muted small mb-1">
-          <i class="fas fa-star me-1 text-primary"></i> Priority:
-          <span class="text-primary">{{ course.priority }}</span>
-          <span class="ms-3"><i class="fas fa-graduation-cap me-1"></i> {{ course.credits }} Credits</span>
-        </p>
-      </div>
-
-      <!-- Middle Column: Review Info -->
-      <div class="col-md-4">
-        <p class="text-muted small mb-2">
-          {{ course.reviewMessage }}
-        </p>
-        <p class="text-muted small mb-1">
-          <i class="fas fa-calendar me-1"></i> Submitted: {{ course.submitted }}
-        </p>
-        <p class="text-muted small">
-          <i class="fas fa-eye me-1"></i> Reviewed: {{ course.reviewed }}
-        </p>
-      </div>
-
-      <!-- Right Column: Status + Button -->
-      <div class="col-md-2 text-end">
-        <p class="text-muted small mb-2">
-          <i class="fas fa-clock me-1"></i> {{ course.daysAgo }} days ago
-        </p>
-        <div class="status-indicators mb-2">
-          <i 
-            class="fas fa-lg"
-            [class.fa-hourglass-half]="course.status === 'Pending'"
-            [class.text-warning]="course.status === 'Pending'"
-            [class.fa-check-circle]="course.status === 'Approved'"
-            [class.text-success]="course.status === 'Approved'"
-            [attr.title]="course.status"
-          ></i>
-        </div>
-
-        <!-- Approve Button -->
-        <button 
-          *ngIf="course.status === 'Pending'" 
-          (click)="approveCourse()" 
-          class="btn btn-sm btn-outline-success w-100 rounded-pill"
-        >
-          Approve Course
-        </button>
-      </div>
+    <!-- Title -->
+    <div class="mb-3">
+      <label>Title <span class="text-danger">*</span></label>
+      <input type="text" formControlName="title" class="form-control" placeholder="Course Title">
+      <small class="text-danger" *ngIf="courseForm.get('title')?.touched && courseForm.get('title')?.errors">
+        <div *ngIf="courseForm.get('title')?.errors?.['required']">Title is required.</div>
+        <div *ngIf="courseForm.get('title')?.errors?.['minlength']">Minimum 3 characters.</div>
+        <div *ngIf="courseForm.get('title')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
     </div>
-  </div>
-</div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label>Description <span class="text-danger">*</span></label>
+      <textarea formControlName="description" class="form-control" placeholder="Description"></textarea>
+      <small class="text-danger" *ngIf="courseForm.get('description')?.touched && courseForm.get('description')?.errors">
+        <div *ngIf="courseForm.get('description')?.errors?.['required']">Description is required.</div>
+        <div *ngIf="courseForm.get('description')?.errors?.['minlength']">Minimum 10 characters.</div>
+      </small>
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+      <label>Department <span class="text-danger">*</span></label>
+      <input type="text" formControlName="department" class="form-control" placeholder="Department">
+      <small class="text-danger" *ngIf="courseForm.get('department')?.touched && courseForm.get('department')?.errors">
+        <div *ngIf="courseForm.get('department')?.errors?.['required']">Department is required.</div>
+        <div *ngIf="courseForm.get('department')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Instructor -->
+    <div class="mb-3">
+      <label>Instructor <span class="text-danger">*</span></label>
+      <input type="text" formControlName="instructor" class="form-control" placeholder="Instructor Name">
+      <small class="text-danger" *ngIf="courseForm.get('instructor')?.touched && courseForm.get('instructor')?.errors">
+        <div *ngIf="courseForm.get('instructor')?.errors?.['required']">Instructor name is required.</div>
+        <div *ngIf="courseForm.get('instructor')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Material -->
+    <!-- <div class="mb-3">
+      <label>Material (PDF upload)</label>
+      <input type="file" (change)="onMaterialSelected($event)" accept="application/pdf" class="form-control" />
+    </div> -->
+
+    <!-- Category -->
+    <div class="mb-3">
+      <label>Category</label>
+      <input type="text" formControlName="category" class="form-control" placeholder="Category (optional)">
+      <small class="text-danger" *ngIf="courseForm.get('category')?.touched && courseForm.get('category')?.errors">
+        <div *ngIf="courseForm.get('category')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Duration -->
+    <div class="mb-3">
+      <label>Code <span class="text-danger">*</span></label>
+      <input type="text" formControlName="duration" class="form-control" placeholder="Duration">
+      <small class="text-danger" *ngIf="courseForm.get('duration')?.touched && courseForm.get('duration')?.errors">
+        <div *ngIf="courseForm.get('duration')?.errors?.['required']">Code is required.</div>
+        <div *ngIf="courseForm.get('duration')?.errors?.['pattern']">Only letters, numbers, and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Rating -->
+    <div class="mb-3">
+      <label>Rating (0 to 5) <span class="text-danger">*</span></label>
+      <input type="number" formControlName="rating" class="form-control" min="0" max="5" step="0.1" placeholder="Rating">
+      <small class="text-danger" *ngIf="courseForm.get('rating')?.touched && courseForm.get('rating')?.errors">
+        <div *ngIf="courseForm.get('rating')?.errors?.['required']">Rating is required.</div>
+        <div *ngIf="courseForm.get('rating')?.errors?.['min'] || courseForm.get('rating')?.errors?.['max']">Rating must be between 0 and 5.</div>
+        <div *ngIf="courseForm.get('rating')?.errors?.['pattern']">Invalid rating format.</div>
+      </small>
+    </div>
+
+    <!-- Modules -->
+    <div class="mb-3">
+      <label>Modules <span class="text-danger">*</span></label>
+      <div formArrayName="modules">
+        <div *ngFor="let module of modules.controls; let i = index" class="input-group mb-2">
+          <input [formControlName]="i" class="form-control" placeholder="Module name">
+          <button type="button" class="btn btn-outline-danger" (click)="removeModule(i)" *ngIf="modules.length > 1">Remove</button>
+          <small class="text-danger" *ngIf="module.touched && module.errors?.['required']">
+            Module name is required.
+          </small>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="addModule()">+ Add Module</button>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Add Course</button>
+    <button type="button" class="btn btn-danger w-100 mt-1" (click)="close()">Close</button>
+  </form>
 </div>

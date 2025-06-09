@@ -6,6 +6,8 @@ const instructorSchema = new mongoose.Schema({
   department: String,
   role: String,
   education: String,
+  skill:String,
+  experience:String
 });
 
 module.exports = mongoose.model('Instructor', instructorSchema);

@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
-  role: String, // 'Principal' | 'Instructor' | 'Student'
+ role: { type: String, default: 'Admin' } 
 });
 
 module.exports = mongoose.model('model', userSchema);

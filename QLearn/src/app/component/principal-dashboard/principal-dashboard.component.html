@@ -1,97 +1,85 @@
 <div class="dashboard">
-  
 
-
-<div class="container-fluid mt-5" data-aos="fade-up">
-  <div class="row g-3">
-    <div class="col-md-3 col-sm-6">
-      <div class="card dash-box shadow-sm text-center p-3">
-        <div class="icon mb-2">📚</div>
-        <h5>Total Courses</h5>
-        <h3>{{ totalCourses }}</h3>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card dash-box shadow-sm text-center p-3">
-        <div class="icon mb-2">👨‍🏫</div>
-        <h5>Total Instructors</h5>
-        <h3>{{ totalInstructors }}</h3>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card dash-box shadow-sm text-center p-3">
-        <div class="icon mb-2">🎓</div>
-        <h5>Total Students</h5>
-        <h3>{{ totalStudents }}</h3>
-      </div>
-    </div>
-    <div class="col-md-3 col-sm-6">
-      <div class="card dash-box shadow-sm text-center p-3">
-        <div class="icon mb-2">✅</div>
-        <h5>Approved Courses</h5>
-        <h3>{{ approvedCourses }}</h3>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div class="Echart row" >
- 
-<div class="col-md-6">
-   <div echarts [options]="chartOption" class="chart1" ></div>
-</div>
-<div class="col-md-6">
-
-  <div echarts [options]="chartOptions" class="chart1"></div>
-</div>
-</div>
-<div class="Echart row">
- 
-<div class="col-md-4">
-
-  <div echarts [options]="courseChart" class="mb-5 chart" ></div>
-</div>
-<div class="col-md-4">
- 
-  <div echarts [options]="ratingChart" class="mb-5 chart" ></div>
-</div>
-<div class="col-md-4">
-
-  <div echarts [options]="completionChart" class="chart"></div>
-</div>
-</div>
-
-
-<div class="card shadow-sm rounded-4 border-0 mb-4" *ngIf="recommendedCourses.length > 0">
-  <div class="card-body">
-    <h6 class="fw-bold mb-3 text-success">
-      <i class="fas fa-thumbs-up me-2"></i> Recommended Courses
-    </h6>
-
+  <!-- Summary Cards -->
+  <div class="container-fluid mt-5" data-aos="fade-up">
     <div class="row g-3">
-      <div class="col-md-4" *ngFor="let course of recommendedCourses">
-        <div class="p-3 border rounded-3 bg-light h-100">
-          <h6 class="fw-semibold text-primary">{{ course.title }}</h6>
-          <p class="mb-1 small text-muted">
-            <i class="fas fa-star text-warning me-1"></i> {{ course.rating }} / 5
-          </p>
-          <p class="mb-1 small text-muted">
-            <i class="fas fa-building me-1"></i> {{ course.department }}
-          </p>
-     
+      <div class="col-md-3 col-sm-6" *ngIf="totalCourses !== undefined">
+        <div class="card dash-box shadow-sm text-center p-3">
+          <div class="icon mb-2">📚</div>
+          <h5>Total Courses</h5>
+          <h3>{{ totalCourses }}</h3>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6" *ngIf="totalInstructors !== undefined">
+        <div class="card dash-box shadow-sm text-center p-3">
+          <div class="icon mb-2">👨‍🏫</div>
+          <h5>Total Instructors</h5>
+          <h3>{{ totalInstructors }}</h3>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6" *ngIf="totalStudents !== undefined">
+        <div class="card dash-box shadow-sm text-center p-3">
+          <div class="icon mb-2">🎓</div>
+          <h5>Total Students</h5>
+          <h3>{{ totalStudents }}</h3>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6" *ngIf="allDepartments !== undefined">
+        <div class="card dash-box shadow-sm text-center p-3">
+          <div class="icon mb-2">✅</div>
+          <h5>Total Departments</h5>
+          <h3>{{ allDepartments }}</h3>
         </div>
       </div>
     </div>
   </div>
-</div>
 
+  <!-- First Row of Charts -->
+  <div class="Echart row mt-5">
+    <div class="col-md-6 mb-4">
+      <div echarts [options]="chartOption" class="chart1" style="height: 350px;"></div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div echarts [options]="chartOptions" class="chart1" style="height: 350px;"></div>
+    </div>
+  </div>
 
+  <!-- Second Row of Charts -->
+  <div class="Echart row">
+    <div class="col-md-4 mb-4">
+      <div echarts [options]="courseChart" class="chart" style="height: 350px;"></div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div echarts [options]="ratingChart" class="chart" style="height: 350px;"></div>
+    </div>
+    <div class="col-md-4 mb-4">
+      <div echarts [options]="completionChart" class="chart" style="height: 350px;"></div>
+    </div>
+  </div>
 
-
-
-
-
-
+  <!-- Recommended Courses Table -->
+  <div class="recommended-section mt-5">
+    <h3 class="text-center mb-3">🌟 Recommended Courses</h3>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="table-primary">
+          <tr>
+            <th>Title</th>
+            <th>Department</th>
+            <th>Rating</th>
+            <th>Instructor</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let course of recommendedCourses">
+            <td>{{ course.title }}</td>
+            <td>{{ course.department || 'N/A' }}</td>
+            <td>{{ course.rating }}</td>
+            <td>{{ course.instructor || 'Unknown' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
 </div>
