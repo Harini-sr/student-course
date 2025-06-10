@@ -34,6 +34,7 @@ const courseSchema = new mongoose.Schema({
   ],
   department: String,
   numberOfSeats: Number,
-  instructorId: String
+  instructorId: String,
+    instructorName: String
 });
 module.exports = mongoose.model('Course', courseSchema);

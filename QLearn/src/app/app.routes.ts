@@ -14,6 +14,7 @@ import { MyLearningComponent } from './component/mylearning/mylearning.component
 import { StudentDetailComponent } from './component/student-detail/student-detail.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
 import { EditInstructorComponent } from './component/edit-instructor/edit-instructor.component';
+import { StudentDataComponent } from './component/student-data/student-data.component';
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent }, 
@@ -53,7 +54,8 @@ export const routes: Routes = [
   {
     path:'dashboard', component: DashboardComponent
   },
-  { path: 'edit-instructor/:id', component:EditInstructorComponent  }
+  { path: 'edit-instructor/:id', component:EditInstructorComponent  },
+  {path:'student-data', component:StudentDataComponent}
 
   
 ];
