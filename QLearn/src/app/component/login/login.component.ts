@@ -70,6 +70,7 @@ submit() {
         alert(res.message);
     if (res.role === 'Admin') {
           this.router.navigate(['/principal-dashboard']);
+          
         } else if (res.role === 'Student') {
           this.router.navigate(['/dashboard']);
         } 
