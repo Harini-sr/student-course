@@ -13,6 +13,7 @@ import { CourseDetailComponent } from './component/course-detail/course-detail.c
 import { MyLearningComponent } from './component/mylearning/mylearning.component';
 import { StudentDetailComponent } from './component/student-detail/student-detail.component';
 import { DashboardComponent } from './component/dashboard/dashboard.component';
+import { EditInstructorComponent } from './component/edit-instructor/edit-instructor.component';
 
 export const routes: Routes = [
     { path: 'main-page', component: MainPageComponent }, 
@@ -51,6 +52,8 @@ export const routes: Routes = [
   { path: 'student-detail', component: StudentDetailComponent},
   {
     path:'dashboard', component: DashboardComponent
-  }
+  },
+  { path: 'edit-instructor/:id', component:EditInstructorComponent  }
+
   
 ];

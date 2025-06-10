@@ -1,0 +1,31 @@
+<div class="container mt-5">
+  <h2>Edit Instructor</h2>
+  <form [formGroup]="instructorForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label>Instructor ID</label>
+      <input class="form-control" formControlName="instructorId" />
+    </div>
+
+    <div class="mb-3">
+      <label>Name</label>
+      <input class="form-control" formControlName="name" />
+    </div>
+
+    <div class="mb-3">
+      <label>Email</label>
+      <input class="form-control" formControlName="email" />
+    </div>
+
+    <div class="mb-3">
+      <label>Department</label>
+      <input class="form-control" formControlName="department" />
+    </div>
+
+    <div class="mb-3">
+      <label>Courses Taken (comma separated)</label>
+      <input class="form-control" formControlName="coursesTaken" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Update</button>
+  </form>
+</div>

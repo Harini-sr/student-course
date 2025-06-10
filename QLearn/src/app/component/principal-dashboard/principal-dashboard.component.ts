@@ -1,186 +1,182 @@
-import { Component } from '@angular/core';
+// principal-dashboard.component.ts
+import { Component, OnInit } from '@angular/core';
 import * as AOS from 'aos';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts/core';
-import { BarChart } from 'echarts/charts';
-import { GridComponent } from 'echarts/components';
+import { BarChart, PieChart, LineChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent, TitleComponent, LegendComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { EChartsCoreOption } from 'echarts';
 import { Router } from '@angular/router';
-echarts.use([BarChart, GridComponent, CanvasRenderer]);
-
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { PrincipalServiceService } from '../../service/principal-service.service';
 import { HttpClientModule } from '@angular/common/http';
 
+echarts.use([
+  BarChart,
+  PieChart,
+  LineChart,
+  GridComponent,
+  CanvasRenderer,
+  TooltipComponent,
+  TitleComponent,
+  LegendComponent
+]);
+
 @Component({
   selector: 'app-principal-dashboard',
+  standalone: true,
   imports: [NgxEchartsDirective, CommonModule, MatDialogModule, HttpClientModule],
-  templateUrl: './principal-dashboard.component.html',
+templateUrl: './principal-dashboard.component.html',
   styleUrl: './principal-dashboard.component.css'
 })
-export class PrincipalDashboardComponent {
-  chartOption: EChartsCoreOption = {
-    title: { text: 'Enrollment Summary by Course', left: 'center' },
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'shadow' }
-    },
-    legend: { data: ['Students'], top: 30 },
-    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
-    xAxis: {
-      type: 'category',
-      data: ['Mathematics', 'Physics', 'Chemistry', 'Computer Science', 'Biology']
-    },
-    yAxis: { type: 'value' },
-    series: [{
-      name: 'Students',
-      type: 'bar',
-      data: [120, 90, 60, 150, 70],
-      itemStyle: { color: '#5470C6' }
-    }]
-  };
+export class PrincipalDashboardComponent implements OnInit {
+  chartOption!: EChartsCoreOption;
+  popularCourseChart!: EChartsCoreOption;
+  courseChart!: EChartsCoreOption;
+  ratingChart!: EChartsCoreOption;
+  completionChart!: EChartsCoreOption;
 
-  constructor(private dialog: MatDialog, private router: Router, private service: PrincipalServiceService) {}
+  roles: string | null = '';
+  totalCourses: number = 0;
+  totalInstructors: number = 0;
+  totalStudents: number = 0;
+  allDepartments: number = 0;
 
-  chartOptions: any;
-  courseChart: any;
-  ratingChart: any;
-  completionChart: any;
+  titles: string[] = [];
+  ratings: number[] = [];
+  recommendedCourses: any[] = [];
 
-  role: string = '';
-  viewAll: any;
-  totalCourses: any;
-  totalInstructors: any;
-  totalStudents :any;
-  approvedCourses: any;
-  highRatedCourses: any;
-  allDepartments: any;
-  titles: any;
-  ratings: any;
+  constructor(
+    private dialog: MatDialog,
+    private router: Router,
+    private service: PrincipalServiceService
+  ) {}
+couName:any;
+  ngOnInit(): void {
+    this.roles = localStorage.getItem('role');
+    console.log('User Role:', this.roles);
 
-  instructorCourseChart: any;
-  recommendedCourses: any;
-  
-roles:any
-  ngOnInit() {
-
-     this.roles = localStorage.getItem('role');
-  console.log('User Role:', this.roles);
-  
     this.service.getInstructor().subscribe((data: any) => {
       this.totalInstructors = data.length;
-      console.log(this.totalInstructors);
-
     });
 
- this.service.getStudents().subscribe((students:any)=>{
-this.totalStudents = students.length;
- })
-
-  this.service.getCourses().subscribe((data: any[]) => {
-    this.totalCourses = data.length;
-    this.ratings = data.map(course => course.rating);
-    this.recommendedCourses = data.filter(course => course.rating >= 3);
-    this.titles = data.map(course => course.title);
-    this.allDepartments = new Set(data.map(course => course.department)).size;
- 
-    
-
-    // Populate courseChart dynamically by instructor
-    const instructorCountMap: { [key: string]: number } = {};
-    data.forEach(course => {
-      const instructor = course.instructor || 'Unknown';
-      instructorCountMap[instructor] = (instructorCountMap[instructor] || 0) + 1;
+    this.service.getStudents().subscribe((data: any) => {
+      this.totalStudents = data.length;
     });
-    const instructorNames = Object.keys(instructorCountMap);
-    const courseCounts = Object.values(instructorCountMap);
 
-    this.courseChart = {
-      title: { text: 'Courses Created per Instructor', left: 'center' },
-      tooltip: { trigger: 'axis' },
-      xAxis: { type: 'category', data: instructorNames },
-      yAxis: { type: 'value' },
+    this.service.getCourses().subscribe((data: any[]) => {
+      this.couName = data.map(c => c.courseName);
+      console.log(this.couName);
+      
+      this.totalCourses = data.length;
+      this.ratings = data.map(c => c.rating);
+      this.titles = data.map(c => c.title || 'Untitled');
+      this.recommendedCourses = data.filter(c => c.rating >= 3);
+      this.allDepartments = new Set(data.map(c => c.department)).size;
+
+      // Enrollment Summary
+      const courseNames = data.map(c => c.title || 'Untitled');
+      const seatsData = data.map(c => c.numberOfSeats || 0);
+
+      this.chartOption = {
+        title: { text: 'Enrollment Summary by Course', left: 'center' },
+        tooltip: { trigger: 'axis' },
+        legend: { data: ['Seats'], top: 30 },
+        xAxis: { type: 'category', data: this.couName },
+        yAxis: { type: 'value' },
+        series: [{
+          name: 'Seats',
+          type: 'line',
+          data: seatsData,
+          itemStyle: { color: '#5470C6' }
+        }]
+      };
+
+      // Popular Course Chart (least available seats)
+      const sortedBySeats = [...data].sort((a, b) => a.numberOfSeats - b.numberOfSeats);
+      const topPopularCourses = sortedBySeats.slice(0, 5); // top 5 with least seats
+
+      this.popularCourseChart = {
+        title: { text: 'Most Popular Courses (Least Seats)', left: 'center' },
+        tooltip: {},
+        xAxis: {
+          type: 'category',
+          data: this.couName
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [{
+          name: 'Remaining Seats',
+          type: 'line',
+          data: topPopularCourses.map(c => c.numberOfSeats),
+          itemStyle: { color: '#FF7043' }
+        }]
+      };
+
+      // Courses per Instructor
+ /*      const instructorCountMap: { [key: string]: number } = {};
+      data.forEach(course => {
+        const instructor = course.instructor || 'Unknown';
+        instructorCountMap[instructor] = (instructorCountMap[instructor] || 0) + 1;
+      });
+      this.courseChart = {
+        title: { text: 'Courses per Instructor', left: 'center' },
+        xAxis: { type: 'category', data: Object.keys(instructorCountMap) },
+        yAxis: { type: 'value' },
+        series: [{
+          type: 'bar',
+          data: Object.values(instructorCountMap),
+          itemStyle: { color: '#42A5F5' }
+        }]
+      };
+
+      // Ratings per Instructor
+      const instructorRatings: { [key: string]: number[] } = {};
+      data.forEach(course => {
+        const instructor = course.instructor || 'Unknown';
+        if (!instructorRatings[instructor]) instructorRatings[instructor] = [];
+        instructorRatings[instructor].push(course.rating);
+      });
+      const avgInstructorNames = Object.keys(instructorRatings);
+      const avgRatings = avgInstructorNames.map(name => {
+        const total = instructorRatings[name].reduce((a, b) => a + b, 0);
+        return parseFloat((total / instructorRatings[name].length).toFixed(2));
+      });
+
+      this.ratingChart = {
+        title: { text: 'Avg Ratings per Instructor', left: 'center' },
+        xAxis: { type: 'category', data: avgInstructorNames },
+        yAxis: { type: 'value', min: 0, max: 5 },
+        series: [{
+          type: 'line',
+          data: avgRatings,
+          smooth: true,
+          itemStyle: { color: '#66BB6A' }
+        }]
+      }; */
+    });
+
+    // Static Completion Chart
+  /*   this.completionChart = {
+      title: { text: 'Course Completion Rate (%)', left: 'center' },
+      tooltip: { trigger: 'item' },
+      legend: { bottom: 0 },
       series: [{
-        type: 'bar',
-        data: courseCounts,
-        itemStyle: { color: '#42A5F5' }
+        name: 'Completion Rate',
+        type: 'pie',
+        radius: '55%',
+        data: [
+          { value: 85, name: 'Alice' },
+          { value: 70, name: 'Bob' },
+          { value: 60, name: 'Charlie' },
+          { value: 90, name: 'David' }
+        ]
       }]
-    };
+    }; */
 
     AOS.init();
-
-    this.chartOptions = {
-      title: { text: 'Popular Courses', left: 'center' },
-      tooltip: {},
-      xAxis: { type: 'category', data: this.titles },
-      yAxis: { type: 'value' },
-      series: [{
-        name: 'Ratings',
-        type: 'bar',
-        data: this.ratings,
-        itemStyle: { color: '#4CAF50' }
-      }]
-    };
-
-    // Group ratings by instructor and calculate average
-    const instructorRatings: { [key: string]: number[] } = {};
-
-    data.forEach((course: { instructor: string; rating: number; }) => {
-      const instructor = course.instructor || 'Unknown';
-      if (!instructorRatings[instructor]) instructorRatings[instructor] = [];
-      instructorRatings[instructor].push(course.rating);
-    });
-
-    const avgInstructorNames = Object.keys(instructorRatings);
-    const avgRatings = avgInstructorNames.map(name => {
-      const ratings = instructorRatings[name];
-      const total = ratings.reduce((a, b) => a + b, 0);
-      return parseFloat((total / ratings.length).toFixed(2));
-    });
-
-    // Assign to ratingChart
-    this.ratingChart = {
-      title: { text: 'Average Ratings per Instructor', left: 'center' },
-      xAxis: { type: 'category', data: avgInstructorNames },
-      yAxis: { type: 'value', min: 0, max: 5 },
-      series: [{
-        type: 'line',
-        data: avgRatings,
-        itemStyle: { color: '#66BB6A' },
-        smooth: true
-      }]
-    };
-  });
-
-  const userData = localStorage.getItem('user');
-  if (userData) {
-    const user = JSON.parse(userData);
-    this.role = user.role;
   }
-
-  this.completionChart = {
-    title: { text: 'Course Completion Rate (%)', left: 'center' },
-    tooltip: { trigger: 'item' },
-    legend: { bottom: 0 },
-    series: [{
-      name: 'Completion Rate',
-      type: 'pie',
-      radius: '55%',
-      data: [
-        { value: 85, name: 'Alice' },
-        { value: 70, name: 'Bob' },
-        { value: 60, name: 'Charlie' },
-        { value: 90, name: 'David' }
-      ]
-    }]
-  };
-}
-
-  courses = [
-    { title: 'Angular Basics', rating: 4.8, status: 'Approved', department: 'cse' },
-    { title: 'Node.js Fundamentals', rating: 4.2, status: 'Approved' },
-    { title: 'MongoDB Mastery', rating: 4.9, status: 'Approved' }
-  ];
 }

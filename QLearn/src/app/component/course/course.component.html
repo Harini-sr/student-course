@@ -202,7 +202,16 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor</th>
       <td mat-cell *matCellDef="let r">
         <ng-container *ngIf="r._editing; else readInstructor">
-          <input matInput [(ngModel)]="r.instructorId" placeholder="Instructor ID" />
+       <!--    <input matInput [(ngModel)]="r.instructorId" placeholder="Instructor ID" /> -->
+           <mat-form-field appearance="fill" class="w-100">
+  <mat-label>Select Instructor</mat-label>
+  <mat-select [(ngModel)]="r.instructorId">
+    <mat-option *ngFor="let instructor of instructors" [value]="instructor.instructorId">
+      {{ instructor.instructorId }} - {{ instructor.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
         </ng-container>
         <ng-template #readInstructor>{{ r.instructorId }}</ng-template>
       </td>

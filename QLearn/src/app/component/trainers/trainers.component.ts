@@ -1,21 +1,27 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   import * as AOS from 'aos';
 import { PrincipalServiceService } from '../../service/principal-service.service';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Import Bootstrap types if you want typing support (optional)
 declare var bootstrap: any;
 @Component({
   selector: 'app-trainers',
-  imports: [ CommonModule, FormsModule],
+  imports: [ CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './trainers.component.html',
   styleUrl: './trainers.component.css'
 })
 export class TrainersComponent {
   selectedInstructor: any;
 
-  constructor(private service:PrincipalServiceService){}
+    instructorForm!: FormGroup;
+  id!: string;
+  
+  constructor(private service:PrincipalServiceService, private route: ActivatedRoute,
+    private fb: FormBuilder,
+    private router: Router
+){}
 /* instructors = [
     {
           imageUrl: 'assets/images/kids.jpg',
@@ -115,5 +121,17 @@ viewProfile(instructor: any) {
   const modal = new bootstrap.Modal(document.getElementById('profileModal')!);
   modal.show();
 }
+  editProfile(instructor: any) {
+    this.router.navigate(['/edit-instructor', instructor._id]);
+  }
+onDelete(instructorId: string) {
+  if (confirm('Are you sure you want to delete this instructor?')) {
+    this.service.deleteInstructor(instructorId).subscribe(() => {
+      alert('Instructor deleted!');
+      this.instructors = this.instructors.filter(inst => inst.instructorId !== instructorId);
+    });
+  }
+}
+
 
 }

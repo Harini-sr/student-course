@@ -146,6 +146,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {MatSelectModule} from '@angular/material/select';
 
 interface Course {
   _id?: string;
@@ -173,7 +174,8 @@ interface Course {
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
-    CommonModule
+    CommonModule,
+    MatSelectModule
   ],
   templateUrl: './course.component.html',
   styleUrls: ['./course.component.css']
@@ -202,10 +204,18 @@ export class CourseComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 roles:any;
+instructors: any[] = [];
+r = {
+  instructorId: ''
+};
   ngOnInit() {
       this.roles = localStorage.getItem('role');
   console.log('User Role:', this.roles);
     this.loadCourses();
+      this.svc.getInstructor().subscribe((data: any) => {
+    this.instructors = data;
+    console.log(this.instructors);
+  });
   }
 
   loadCourses() {
@@ -366,7 +376,7 @@ roles:any;
   confirmDelete(row: Course) {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { type: 'delete', course: row },
-      width: '300px'
+      width: '300px', height:'500px'
     });
 
     dialogRef.afterClosed().subscribe(result => {

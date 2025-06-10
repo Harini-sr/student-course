@@ -15,4 +15,4 @@ const instructorSchema = new mongoose.Schema({
   coursesTaken: { type: [String], default: [] }
 });
 
-module.exports = mongoose.model('Instructor', instructorSchema);
+module.exports = mongoose.model('instructor', instructorSchema);
