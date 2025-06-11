@@ -34,10 +34,7 @@ ngOnInit() {
 }
 
     profile(){
-   /*    this.dialog.open(ProfileComponent,{
-      height: '400px',
-      width: '400px',
-      })  */
+ 
         this.router.navigate(['/main-page']); 
     }
   isLoginPage(): boolean {
